@@ -1,2 +1,5 @@
 database/.env
 database/lugx-gaming-database-secret.yml
+
+clickhouse/.env
+clickhouse/lugx-gaming-clickhouse-secret.yml

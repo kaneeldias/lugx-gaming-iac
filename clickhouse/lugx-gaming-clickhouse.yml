@@ -1,0 +1,65 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: lugx-gaming-clickhouse-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: lugx-gaming-clickhouse-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: lugx-gaming
+      tier: clickhouse
+  template:
+    metadata:
+      labels:
+        app: lugx-gaming
+        tier: clickhouse
+    spec:
+      containers:
+        - name: clickhouse-server
+          image: clickhouse/clickhouse-server:latest
+          ports:
+            - containerPort: 8123
+          env:
+            - name: CLICKHOUSE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: lugx-gaming-clickhouse-credentials-secret
+                  key: CLICKHOUSE_PASSWORD
+          volumeMounts:
+            - name: clickhouse-storage
+              mountPath: /var/lib/clickhouse
+            - name: clickhouse-init-script
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: clickhouse-storage
+          persistentVolumeClaim:
+            claimName: lugx-gaming-clickhouse-pvc
+        - name: clickhouse-init-script
+          configMap:
+            name: lugx-gaming-clickhouse-init-configmap
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lugx-gaming-clickhouse-service
+spec:
+  selector:
+    app: lugx-gaming
+    tier: clickhouse
+  ports:
+    - protocol: TCP
+      port: 8123
+      targetPort: 8123
+      nodePort: 30084
+  type: NodePort
