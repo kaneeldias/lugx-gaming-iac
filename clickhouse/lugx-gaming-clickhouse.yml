@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: lugx-gaming-clickhouse-pvc
 spec:
+  storageClassName: ebs-sc-automode
   accessModes:
     - ReadWriteOnce
   resources:

@@ -3,6 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: lugx-gaming-database-pvc
 spec:
+  storageClassName: ebs-sc-automode
   accessModes:
     - ReadWriteOnce
   resources:
@@ -49,6 +50,7 @@ spec:
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data
+              subPath: postgres
       volumes:
         - name: postgres-storage
           persistentVolumeClaim:

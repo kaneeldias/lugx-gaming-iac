@@ -1,0 +1,56 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lugx-gaming-ingress
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  defaultBackend:
+    service:
+      name: lugx-gaming-frontend-service
+      port:
+        number: 80
+  rules:
+    - host: lugx-gaming.kaneel.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lugx-gaming-frontend-service
+                port:
+                  number: 80
+    - host: games-service.lugx-gaming.kaneel.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lugx-gaming-games-service-api-service
+                port:
+                  number: 3000
+    - host: order-service.lugx-gaming.kaneel.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lugx-gaming-order-service-api-service
+                port:
+                  number: 3000
+    - host: analytics-service.lugx-gaming.kaneel.net
+      http  :
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lugx-gaming-analytics-service-api-service
+                port:
+                  number: 3000
