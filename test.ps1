@@ -27,3 +27,5 @@ kubectl apply -f .\lugx-gaming-order-service-api.yml
 kubectl apply -f .\lugx-gaming-analytics-service-api.yml
 
 kubectl apply -f .\lugx-gaming-frontend.yml
+
+kubectl apply -f .\datadog\datadog-agent.yml
