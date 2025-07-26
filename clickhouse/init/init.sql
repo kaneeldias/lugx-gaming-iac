@@ -7,3 +7,12 @@ CREATE TABLE IF NOT EXISTS web_analytics.page_views (
     timestamp DateTime DEFAULT now()
 ) ENGINE = MergeTree()
 ORDER BY id;
+
+CREATE TABLE IF NOT EXISTS web_analytics.clicks (
+    id UUID DEFAULT generateUUIDv4(),
+    path String,
+    element String,
+    ip_address String,
+    timestamp DateTime DEFAULT now()
+) ENGINE = MergeTree()
+ORDER BY id;
