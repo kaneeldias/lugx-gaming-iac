@@ -1,0 +1,41 @@
+name: Update games service image and deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      image-tag:
+        description: "The tag of the Docker image to be used"
+        required: true
+        default: "latest"
+
+jobs:
+  change-image-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Change image tag in deployment file
+        run: |
+          sed -i "s|image: kaneeldias/lugx-games-service-api:.*|image: kaneeldias/lugx-games-service-api:${{ github.event.inputs.image-tag }}|g" lugx-games-service-api.yml
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update games service image tag to ${{ github.event.inputs.image-tag }}"
+          branch: master
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up kubectl and EKS context
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.CLUSTER_NAME }}
+
+      - name: Apply Kubernetes manifest
+        run: |
+          kubectl apply -f lugx-games-service-api.yml && kubectl rollout restart deployment/lugx-games-service-api
