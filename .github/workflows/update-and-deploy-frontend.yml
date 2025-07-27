@@ -1,0 +1,26 @@
+name: Update frontend image and deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      image-tag:
+        description: "The tag of the Docker image to be used"
+        required: true
+        default: "latest"
+
+jobs:
+  change-image-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Change image tag in deployment file
+        run: |
+          sed -i "s|image: kaneeldias/lugx-gaming-frontend:.*|image: kaneeldias/lugx-gaming-frontend:${{ github.event.inputs.image-tag }}|g" .github/workflows/lugx-gaming-frontend.yml
+
+      - name: Commit and push changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "Update frontend image tag to ${{ github.event.inputs.image-tag }}"
+          branch: master
