@@ -38,4 +38,4 @@ jobs:
 
       - name: Apply Kubernetes manifest
         run: |
-          kubectl apply -f lugx-gaming-frontend.yml
+          kubectl apply -f lugx-gaming-frontend.yml && kubectl rollout restart deployment/lugx-gaming-frontend-deployment
