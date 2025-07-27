@@ -8,7 +8,7 @@ on:
         required: true
         default: "latest"
   repository_dispatch:
-    types: [ update-image-and-deploy ]
+    types: [ update-games-image-and-deploy ]
 
 jobs:
   change-image-tag:
