@@ -38,4 +38,4 @@ jobs:
 
       - name: Apply Kubernetes manifest
         run: |
-          kubectl apply -f lugx-gaming-games-service-api.yml && kubectl rollout restart deployment/lugx-gaming-games-service-api
+          kubectl apply -f lugx-gaming-games-service-api.yml && kubectl rollout restart deployment/lugx-gaming-games-service-api-deployment
