@@ -7,6 +7,8 @@ on:
         description: "The tag of the Docker image to be used"
         required: true
         default: "latest"
+  repository_dispatch:
+    types: [ update-image-and-deploy ]
 
 jobs:
   change-image-tag:
@@ -15,14 +17,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Determine image tag
+        id: determine-tag
+        run: |
+          if [ "${{ github.event_name }}" == "repository_dispatch" ]; then
+            echo "image-tag=${{ github.event.client_payload.image-tag }}" >> $GITHUB_ENV
+          else
+            echo "image-tag=${{ github.event.inputs.image-tag }}" >> $GITHUB_ENV
+          fi
+
       - name: Change image tag in deployment file
         run: |
-          sed -i "s|image: kaneeldias/lugx-gaming-analytics-service-api:.*|image: kaneeldias/lugx-gaming-analytics-service-api:${{ github.event.inputs.image-tag }}|g" lugx-gaming-analytics-service-api.yml
+          sed -i "s|image: kaneeldias/lugx-gaming-analytics-service-api:.*|image: kaneeldias/lugx-gaming-analytics-service-api:${{ env.image-tag }}|g" lugx-gaming-analytics-service-api.yml
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "Update analytics service image tag to ${{ github.event.inputs.image-tag }}"
+          commit_message: "Update analytics service image tag to ${{ env.image-tag }}"
           branch: master
 
       - name: Configure AWS credentials
