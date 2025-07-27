@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: lugx-gaming-frontend
-          image: kaneeldias/lugx-gaming-frontend:latest
+          image: kaneeldias/lugx-gaming-frontend:hello
           ports:
             - containerPort: 80
           resources:
