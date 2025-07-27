@@ -3,3 +3,4 @@ database/lugx-gaming-database-secret.yml
 
 clickhouse/.env
 clickhouse/lugx-gaming-clickhouse-secret.yml
+clickhouse/lugx-gaming-clickhouse-mysql-user-configmap.yml

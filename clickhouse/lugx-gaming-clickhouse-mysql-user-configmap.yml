@@ -7,7 +7,7 @@ data:
     <clickhouse>
       <users>
         <mysql_user>
-            <password_double_sha1_hex>750256969db662ee62169f19a3fe5a1f9e3f681c</password_double_sha1_hex>
+            <password_double_sha1_hex>{{double_sha1_hex_password}}</password_double_sha1_hex>
             <networks>
                 <ip>::/0</ip>
             </networks>
