@@ -24,3 +24,18 @@ jobs:
         with:
           commit_message: "Update frontend image tag to ${{ github.event.inputs.image-tag }}"
           branch: master
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Set up kubectl and EKS context
+        run: |
+          aws eks update-kubeconfig --region ${{ secrets.AWS_REGION }} --name ${{ secrets.CLUSTER_NAME }}
+
+      - name: Apply Kubernetes manifest
+        run: |
+          kubectl apply -f lugx-gaming-frontend.yml
