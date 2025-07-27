@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: lugx-gaming-order-service-api
-          image: kaneeldias/lugx-gaming-order-service-api:latest
+          image: kaneeldias/lugx-gaming-order-service-api:9f8690f
           env:
             - name: TAG
               value: "latest"
