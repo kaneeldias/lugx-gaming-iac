@@ -6,8 +6,15 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:eu-west-1:996835183634:certificate/43f4bfcf-ea80-4c1a-857d-33f8574f29d5
 spec:
   ingressClassName: alb
+  tls:
+    - hosts:
+        - lugx-gaming.kaneel.net
+        - games-service.lugx-gaming.kaneel.net
+        - order-service.lugx-gaming.kaneel.net
+        - analytics-service.lugx-gaming.kaneel.net
   defaultBackend:
     service:
       name: lugx-gaming-frontend-service

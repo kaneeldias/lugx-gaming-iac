@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lugx-gaming-clickhouse-mysql-user-configmap
+data:
+  mysql_user.xml: |
+    <clickhouse>
+      <users>
+        <mysql_user>
+            <password_double_sha1_hex>750256969db662ee62169f19a3fe5a1f9e3f681c</password_double_sha1_hex>
+            <networks>
+                <ip>::/0</ip>
+            </networks>
+            <profile>default</profile>
+            <quota>default</quota>
+        </mysql_user>
+      </users>
+        
+      <profiles>
+          <default>
+              <prefer_column_name_to_alias>1</prefer_column_name_to_alias>
+              <mysql_map_string_to_text_in_show_columns>1</mysql_map_string_to_text_in_show_columns>
+              <mysql_map_fixed_string_to_text_in_show_columns>1</mysql_map_fixed_string_to_text_in_show_columns>
+          </default>
+      </profiles>
+    </clickhouse>
+        

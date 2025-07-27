@@ -31,6 +31,7 @@ spec:
           image: clickhouse/clickhouse-server:latest
           ports:
             - containerPort: 8123
+            - containerPort: 9004
           env:
             - name: CLICKHOUSE_PASSWORD
               valueFrom:
@@ -42,6 +43,11 @@ spec:
               mountPath: /var/lib/clickhouse
             - name: clickhouse-init-script
               mountPath: /docker-entrypoint-initdb.d
+            - name: clickhouse-mysql-interface
+              mountPath: /etc/clickhouse-server/conf.d
+            - name: clickhouse-mysql-user
+              mountPath: /etc/clickhouse-server/users.d/mysql_user.xml
+              subPath: mysql_user.xml
       volumes:
         - name: clickhouse-storage
           persistentVolumeClaim:
@@ -49,11 +55,19 @@ spec:
         - name: clickhouse-init-script
           configMap:
             name: lugx-gaming-clickhouse-init-configmap
+        - name: clickhouse-mysql-interface
+          configMap:
+            name: lugx-gaming-clickhouse-mysql-interface-configmap
+        - name: clickhouse-mysql-user
+          configMap:
+            name: lugx-gaming-clickhouse-mysql-user-configmap
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: lugx-gaming-clickhouse-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
 spec:
   selector:
     app: lugx-gaming
@@ -63,4 +77,21 @@ spec:
       port: 8123
       targetPort: 8123
       nodePort: 30084
-  type: NodePort
+  type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lugx-gaming-clickhouse-mysql-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+spec:
+  selector:
+    app: lugx-gaming
+    tier: clickhouse
+  ports:
+    - protocol: TCP
+      port: 9004
+      targetPort: 9004
+      nodePort: 30085
+  type: LoadBalancer

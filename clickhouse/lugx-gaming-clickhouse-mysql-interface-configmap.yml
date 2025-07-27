@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lugx-gaming-clickhouse-mysql-interface-configmap
+data:
+  mysql.xml: |
+    <clickhouse>
+      <mysql_port>9004</mysql_port>
+      <listen_host>::</listen_host>
+    </clickhouse>

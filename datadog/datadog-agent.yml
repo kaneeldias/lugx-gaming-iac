@@ -10,7 +10,7 @@ spec:
         secretName: "datadog-secret"
         keyName: "api-key"
     tags:
-      - "env:dev"
+      - "env:prod"
   features:
     apm:
       instrumentation:
