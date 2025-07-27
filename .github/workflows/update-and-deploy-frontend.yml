@@ -17,7 +17,7 @@ jobs:
 
       - name: Change image tag in deployment file
         run: |
-          sed -i "s|image: kaneeldias/lugx-gaming-frontend:.*|image: kaneeldias/lugx-gaming-frontend:${{ github.event.inputs.image-tag }}|g" .github/workflows/lugx-gaming-frontend.yml
+          sed -i "s|image: kaneeldias/lugx-gaming-frontend:.*|image: kaneeldias/lugx-gaming-frontend:${{ github.event.inputs.image-tag }}|g" lugx-gaming-frontend.yml
 
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v4
