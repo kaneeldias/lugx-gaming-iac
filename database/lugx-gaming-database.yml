@@ -47,6 +47,13 @@ spec:
                 secretKeyRef:
                   name: lugx-gaming-database-credentials-secret
                   key: POSTGRES_DB
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "125m"
+            limits:
+              memory: "128Mi"
+              cpu: "250m"
           volumeMounts:
             - name: postgres-storage
               mountPath: /var/lib/postgresql/data

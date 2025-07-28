@@ -38,6 +38,13 @@ spec:
                 secretKeyRef:
                   name: lugx-gaming-clickhouse-credentials-secret
                   key: CLICKHOUSE_PASSWORD
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "500m"
+            limits:
+              memory: "512Mi"
+              cpu: "1000m"
           volumeMounts:
             - name: clickhouse-storage
               mountPath: /var/lib/clickhouse
