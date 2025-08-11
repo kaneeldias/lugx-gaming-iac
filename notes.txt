@@ -1,0 +1,33 @@
+terraform import aws_route53_zone.lugx-gaming-kaneel-net Z07810671NDRG6GSQNTC0
+
+Run terraform apply
+
+1. Change cluster access configuration authentication method
+2. Add IAM access entries
+ - AmazonEKSAdminPolicy, AmazonEKSClusterAdminPolicy
+        to AWSReservedSSO_eks-cluster-policy_c1d481464a415cbf
+        to arn:aws:iam::996835183634:root
+
+Install EKS pod identity agent
+Install EBS CSI driver and metrics server
+
+1. Configure kubectl
+aws eks update-kubeconfig --region eu-west-1 --name lugx-gaming-cluster
+
+# ALB
+./eksctl.exe utils associate-iam-oidc-provider --region eu-west-1 --cluster lugx-gaming-cluster --approve
+aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy --policy-document file://iam-policy.json
+./eksctl.exe create iamserviceaccount --cluster=lugx-gaming-cluster --namespace=kube-system --name=aws-load-balancer-controller --attach-policy-arn=arn:aws:iam::996835183634:policy/AWSLoadBalancerControllerIAMPolicy --override-existing-serviceaccounts --region eu-west-1 --approve --aws-region=eu-west-1 --vpc-id=vpc-09a5162f6389a4ebf
+
+helm repo add eks https://aws.github.io/eks-charts
+helm repo update
+
+(replace VPC ID below)
+helm install aws-load-balancer-controller eks/aws-load-balancer-controller -n kube-system --set clusterName=lugx-gaming-cluster --set serviceAccount.create=false --set serviceAccount.name=aws-load-balancer-controller --set region=eu-west-1 --set vpcId=vpc-09a5162f6389a4ebf
+Run ./test.ps1
+
+Populate DNS records on Route53
+
+1. Install DatadogAgent
+https://app.datadoghq.eu/fleet/install-agent/latest?platform=kubernetes
+kubectl apply -f .\datadog\datadog-agent.yml
